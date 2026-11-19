@@ -107,7 +107,7 @@ const progress = document.querySelector('progress');
 const stepLabel = document.querySelector('#step-label');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const project = new URLSearchParams(location.search).get('progetto')?.trim().slice(0, 120);
-const feedbackEndpoint = '';
+const feedbackEndpoint = 'https://feedback-clienti.feedback-clienti.workers.dev/feedback';
 
 if (project) {
   document.querySelector('#project-name').textContent = project;
