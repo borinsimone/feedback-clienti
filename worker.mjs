@@ -1,9 +1,33 @@
 const fields = { progetto: 120, cosa_ha_funzionato: 2000, cosa_migliorare: 2000 };
 
+function feedbackParams(data) {
+  if (!Number.isInteger(data?.voto) || data.voto < 1 || data.voto > 5) return null;
+  const params = { voto: data.voto };
+  for (const [field, maxLength] of Object.entries(fields)) {
+    const value = data[field];
+    if (typeof value !== 'string' || value.length > maxLength) return null;
+    params[field] = value.trim() || (field === 'progetto' ? 'Generico' : 'Nessuna risposta');
+  }
+  return params;
+}
+
+function contactParams(data) {
+  if ([data?.name, data?.email, data?.message].some(value => typeof value !== 'string')) return null;
+  const name = data.name.trim();
+  const email = data.email.trim();
+  const message = data.message.trim();
+  if (!name || name.length > 100 || /[\r\n]/.test(name) ||
+      email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+      !message || message.length > 3000) return null;
+
+  return { from_name: name, from_email: email, subject: 'Nuovo progetto da ' + name, message };
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin');
-    if (new URL(request.url).pathname !== '/feedback' || origin !== env.ALLOWED_ORIGIN) {
+    const path = new URL(request.url).pathname;
+    if ((path !== '/feedback' && path !== '/contact') || origin !== env.ALLOWED_ORIGIN) {
       return new Response(null, { status: 403 });
     }
 
@@ -20,7 +44,7 @@ export default {
     if (request.headers.get('Content-Type')?.split(';')[0] !== 'application/json') return reply(415);
 
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-    const { success } = await env.SUBMISSIONS.limit({ key: ip });
+    const { success } = await env.SUBMISSIONS.limit({ key: path + ':' + ip });
     if (!success) return reply(429);
 
     let data;
@@ -45,16 +69,13 @@ export default {
       return reply(400);
     }
 
-    if (!Number.isInteger(data?.voto) || data.voto < 1 || data.voto > 5) return reply(400);
-    const params = { voto: data.voto };
-    for (const [field, maxLength] of Object.entries(fields)) {
-      const value = data[field];
-      if (typeof value !== 'string' || value.length > maxLength) return reply(400);
-      params[field] = value.trim() || (field === 'progetto' ? 'Generico' : 'Nessuna risposta');
-    }
+    const isContact = path === '/contact';
+    const params = isContact ? contactParams(data) : feedbackParams(data);
+    if (!params) return reply(400);
 
-    const { EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY, EMAILJS_PRIVATE_KEY } = env;
-    if (![EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY, EMAILJS_PRIVATE_KEY].every(Boolean)) {
+    const { EMAILJS_SERVICE_ID, EMAILJS_PUBLIC_KEY, EMAILJS_PRIVATE_KEY } = env;
+    const templateId = isContact ? env.EMAILJS_CONTACT_TEMPLATE_ID : env.EMAILJS_TEMPLATE_ID;
+    if (![EMAILJS_SERVICE_ID, templateId, EMAILJS_PUBLIC_KEY, EMAILJS_PRIVATE_KEY].every(Boolean)) {
       return reply(503);
     }
 
@@ -65,7 +86,7 @@ export default {
         signal: AbortSignal.timeout(10000),
         body: JSON.stringify({
           service_id: EMAILJS_SERVICE_ID,
-          template_id: EMAILJS_TEMPLATE_ID,
+          template_id: templateId,
           user_id: EMAILJS_PUBLIC_KEY,
           accessToken: EMAILJS_PRIVATE_KEY,
           template_params: params
