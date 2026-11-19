@@ -71,6 +71,17 @@ export default {
           template_params: params
         })
       });
+      if (!response.ok) {
+        const reason = (await response.text()).toLowerCase();
+        const category = reason.includes('non-browser') || reason.includes('non browser')
+          ? 'non-browser requests disabled'
+          : reason.includes('origin') || reason.includes('referer')
+            ? 'origin rejected'
+            : reason.includes('private key') || reason.includes('access token') || reason.includes('accesstoken')
+              ? 'private key rejected'
+              : 'provider rejected request';
+        console.warn('EmailJS', response.status, category);
+      }
       return reply(response.ok ? 204 : 502);
     } catch {
       return reply(502);
