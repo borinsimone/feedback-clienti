@@ -6,84 +6,167 @@
 <meta name="robots" content="noindex">
 <title>Feedback sul progetto · Simone Borin</title>
 <style>
-:root { color-scheme: light; font-family: system-ui, sans-serif; color: #172b26; background: #edf2ec; }
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #0c1013;
+  color: #f0f5f3;
+  --line: #344343;
+  --muted: #aebfbb;
+  --mint: #a5f3cc;
+}
 * { box-sizing: border-box; }
-main { width: min(100% - 2rem, 40rem); margin: clamp(1.5rem, 6vw, 5rem) auto; }
-header { margin-bottom: 1.75rem; }
-.author { color: #35584b; font-weight: 650; }
-h1 { font-family: Georgia, serif; font-size: clamp(2rem, 7vw, 3.6rem); font-weight: 500; line-height: 1.05; margin: .6rem 0 1rem; }
+[hidden] { display: none !important; }
+body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 50% 0%, #193332, transparent 35rem); }
+main { width: min(100% - 2rem, 39rem); margin: auto; padding: clamp(2rem, 7vw, 5rem) 0; }
+header { margin-bottom: 2rem; }
+.brand { display: flex; align-items: center; gap: .7rem; color: var(--muted); font-weight: 650; }
+.mark { display: grid; place-items: center; width: 2.35rem; height: 2.35rem; border: 1px solid #466a61; border-radius: .7rem; color: var(--mint); background: #192b29; font-size: .8rem; }
+h1 { margin: 1rem 0 .65rem; font-size: clamp(2.55rem, 8vw, 4.35rem); line-height: 1.05; letter-spacing: -.065em; }
+.gradient-text { background: var(--gt-gradient); background-clip: text; color: transparent; }
 p { line-height: 1.55; }
-form { background: #fff; padding: clamp(1rem, 5vw, 2rem); border: 1px solid #cddbd0; border-radius: 1rem; }
+header p, .muted, #status { color: var(--muted); }
+#project-label { overflow-wrap: anywhere; }
+form { padding: clamp(1rem, 5vw, 2rem); border: 1px solid var(--line); border-radius: 1.3rem; background: #151c20; box-shadow: 0 22px 65px #0005; }
+.progress { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; color: var(--muted); font-size: .85rem; }
+progress { flex: 1; min-width: 0; height: .38rem; accent-color: var(--mint); }
+progress::-webkit-progress-bar { border-radius: 1rem; background: var(--line); }
+progress::-webkit-progress-value { border-radius: 1rem; background: var(--mint); transition: width .25s ease; }
 fieldset { padding: 0; margin: 0; border: 0; min-width: 0; }
-legend, label { font-weight: 650; }
+.question { display: block; font-size: clamp(1.25rem, 4vw, 1.65rem); font-weight: 700; line-height: 1.25; letter-spacing: -.02em; }
+.scale { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .45rem; margin: .95rem 0 .5rem; }
+.scale label { position: relative; display: grid; place-items: center; min-height: 50px; border: 1px solid var(--line); border-radius: .7rem; background: #1d292d; cursor: pointer; font-size: 1.12rem; }
+.scale input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.scale label:has(:checked) { background: #264c40; color: var(--mint); border-color: var(--mint); }
+.scale label:has(:focus-visible), :focus-visible { outline: 2px solid var(--mint); outline-offset: 3px; }
+.scale-labels, .actions { display: flex; justify-content: space-between; gap: .6rem; }
+[tabindex="-1"]:focus { outline: none; }
 textarea, button { font: inherit; }
-textarea { width: 100%; margin-top: .4rem; padding: .6rem; border: 1px solid #82988a; border-radius: .45rem; resize: vertical; }
-.form-field { margin-top: 1.4rem; }
-small { color: #466055; font-weight: 400; }
-.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: .4rem; margin: .65rem 0 .35rem; }
-.scale label { display: flex; justify-content: center; align-items: center; gap: .2rem; min-height: 44px; border: 1px solid #82988a; border-radius: .45rem; cursor: pointer; }
-.scale label:has(:checked) { background: #d9eadf; border-color: #254b3a; }
-input { accent-color: #254b3a; }
-.scale-labels { display: flex; justify-content: space-between; gap: .5rem; }
-button { margin-top: 1.4rem; min-height: 44px; padding: .6rem 1rem; border: 0; border-radius: .45rem; background: #254b3a; color: #fff; font-weight: 650; cursor: pointer; }
-button:disabled { background: #e2e8e3; color: #46584d; cursor: default; }
-:focus-visible { outline: 3px solid #297462; outline-offset: 3px; }
-#status { margin-bottom: 0; }
+textarea { display: block; width: 100%; margin-top: .55rem; padding: .8rem; border: 1px solid #536764; border-radius: .7rem; background: #101619; color: inherit; resize: vertical; }
+.optional { display: block; margin-top: .55rem; }
+.actions { margin-top: 1.5rem; flex-wrap: wrap; }
+button { min-height: 46px; padding: .65rem 1rem; border: 1px solid var(--line); border-radius: .7rem; background: #1d292d; color: inherit; font-weight: 700; cursor: pointer; }
+button.primary { margin-left: auto; background: var(--mint); color: #0d2921; border-color: transparent; }
+button:disabled { opacity: .55; cursor: default; }
+#status { margin: 1rem 0 0; }
+#status:empty { margin: 0; }
+#status[data-success] { color: var(--mint); margin: 0; font-size: 1.2rem; }
+@media (prefers-reduced-motion: reduce) {
+  progress::-webkit-progress-value { transition: none; }
+}
 </style>
 </head>
 <body>
 <main>
 <header>
-<p class="author">Simone Borin</p>
-<h1>Com’è andata?</h1>
+<div class="brand"><div id="brand-mark" aria-hidden="true"><span class="mark">SB</span></div> Simone Borin</div>
+<h1 id="title">Com’è andata?</h1>
 <p>Grazie per aver lavorato con me. Il tuo feedback mi aiuta a capire cosa ha funzionato e cosa posso migliorare.</p>
 <p id="project-label" hidden>Progetto <strong id="project-name"></strong></p>
 </header>
-<form id="feedback" method="post" data-endpoint="" aria-describedby="status">
+<form id="feedback" method="post" data-endpoint="">
 <input type="hidden" name="Progetto" id="project">
-<fieldset>
-<legend>Quanto il risultato risponde a quello che ti serviva?</legend>
+<div class="progress"><span id="step-label">Domanda 1 di 3</span><progress value="1" max="3" aria-label="Avanzamento del questionario"></progress></div>
+<fieldset data-step>
+<legend class="question" tabindex="-1">Quanto il risultato risponde a quello che ti serviva?</legend>
 <div class="scale">
-<label><input type="radio" name="Valutazione" value="1" required aria-describedby="scale-labels"> 1</label>
-<label><input type="radio" name="Valutazione" value="2" aria-describedby="scale-labels"> 2</label>
-<label><input type="radio" name="Valutazione" value="3" aria-describedby="scale-labels"> 3</label>
-<label><input type="radio" name="Valutazione" value="4" aria-describedby="scale-labels"> 4</label>
-<label><input type="radio" name="Valutazione" value="5" aria-describedby="scale-labels"> 5</label>
+<label><input type="radio" name="Valutazione" value="1" required aria-describedby="scale-labels"><span>1</span></label>
+<label><input type="radio" name="Valutazione" value="2" required aria-describedby="scale-labels"><span>2</span></label>
+<label><input type="radio" name="Valutazione" value="3" required aria-describedby="scale-labels"><span>3</span></label>
+<label><input type="radio" name="Valutazione" value="4" required aria-describedby="scale-labels"><span>4</span></label>
+<label><input type="radio" name="Valutazione" value="5" required aria-describedby="scale-labels"><span>5</span></label>
 </div>
-<small class="scale-labels" id="scale-labels"><span>1 · Per niente</span><span>5 · Del tutto</span></small>
+<small class="scale-labels muted" id="scale-labels"><span>1 · Per niente</span><span>5 · Del tutto</span></small>
 </fieldset>
-<div class="form-field">
-<label for="strengths">Cosa ha funzionato meglio durante il progetto? <small>Facoltativo</small></label>
-<textarea id="strengths" name="Cosa ha funzionato" rows="3" maxlength="2000"></textarea>
+<section data-step hidden>
+<label class="question" for="strengths" tabindex="-1">Cosa ha funzionato meglio durante il progetto?</label>
+<small class="optional muted" id="strengths-hint">Facoltativo</small>
+<textarea id="strengths" name="Cosa ha funzionato" rows="4" maxlength="2000" aria-describedby="strengths-hint"></textarea>
+</section>
+<section data-step hidden>
+<label class="question" for="changes" tabindex="-1">Se rifacessimo il progetto insieme, cosa cambieresti?</label>
+<small class="optional muted" id="changes-hint">Facoltativo</small>
+<textarea id="changes" name="Cosa migliorare" rows="4" maxlength="2000" aria-describedby="changes-hint"></textarea>
+</section>
+<div class="actions">
+<button type="button" id="back" hidden>Indietro</button>
+<button type="button" id="next" class="primary">Continua <span aria-hidden="true">→</span></button>
+<button type="submit" id="send" class="primary" hidden disabled>Invia feedback</button>
 </div>
-<div class="form-field">
-<label for="changes">Se rifacessimo il progetto insieme, cosa cambieresti? <small>Facoltativo</small></label>
-<textarea id="changes" name="Cosa migliorare" rows="3" maxlength="2000"></textarea>
-</div>
-<button type="submit" disabled>Invia feedback</button>
-<p id="status" role="status">L’invio del feedback non è ancora attivo.</p>
+<p id="status" role="status" tabindex="-1"></p>
 </form>
 </main>
-<script>
+<script type="module">
 const form = document.querySelector('#feedback');
-const button = form.querySelector('button');
-const status = document.querySelector('#status');
+const panels = Array.from(form.querySelectorAll('[data-step]'));
+const back = document.querySelector('#back');
+const next = document.querySelector('#next');
+const submit = document.querySelector('#send');
+const message = document.querySelector('#status');
+const progress = document.querySelector('progress');
+const stepLabel = document.querySelector('#step-label');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const project = new URLSearchParams(location.search).get('progetto')?.trim().slice(0, 120);
+const endpoint = form.dataset.endpoint.trim();
+
 if (project) {
   document.querySelector('#project-name').textContent = project;
   document.querySelector('#project-label').hidden = false;
 }
 document.querySelector('#project').value = project || 'Generico';
 
-const endpoint = form.dataset.endpoint.trim();
-form.addEventListener('submit', async (event) => {
+let step = 0;
+let sending = false;
+
+function showStep(target) {
+  const direction = Math.sign(target - step);
+  const panel = panels[target];
+  panels[step].hidden = true;
+  panel.hidden = false;
+  step = target;
+  const last = step === panels.length - 1;
+  back.hidden = step === 0;
+  next.hidden = last;
+  submit.hidden = !last;
+  submit.disabled = !endpoint;
+  progress.value = step + 1;
+  stepLabel.textContent = 'Domanda ' + (step + 1) + ' di ' + panels.length;
+  message.textContent = last && !endpoint ? 'L’invio del feedback non è ancora attivo.' : '';
+  panel.querySelector('.question').focus({ preventScroll: true });
+
+  if (!reduced.matches && direction && panel.animate) {
+    panel.getAnimations().forEach(animation => animation.cancel());
+    panel.animate(
+      [{ opacity: 0, transform: 'translateX(' + (14 * direction) + 'px)' },
+       { opacity: 1, transform: 'translateX(0)' }],
+      { duration: 230, easing: 'ease-out' }
+    );
+  }
+}
+
+function advance() {
+  const rating = form.querySelector('input[type=radio]');
+  if (step === 0 && !rating.reportValidity()) return;
+  showStep(step + 1);
+}
+
+back.addEventListener('click', () => showStep(step - 1));
+next.addEventListener('click', advance);
+
+form.addEventListener('submit', async event => {
   event.preventDefault();
-  if (!endpoint || button.disabled) return;
+  if (sending) return;
+  if (step < panels.length - 1) {
+    advance();
+    return;
+  }
+  if (!endpoint) return;
 
   const answers = new FormData(form);
-  button.disabled = true;
-  status.textContent = 'Invio in corso…';
-
+  sending = true;
+  back.disabled = true;
+  submit.disabled = true;
+  message.textContent = 'Invio in corso…';
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -92,19 +175,468 @@ form.addEventListener('submit', async (event) => {
     });
     if (!response.ok) throw new Error('Invio non riuscito');
     form.reset();
-    form.querySelectorAll('fieldset, .form-field, button').forEach((element) => {
+    form.querySelectorAll('.progress, [data-step], .actions').forEach(element => {
       element.hidden = true;
     });
-    status.textContent = 'Grazie! Ho ricevuto il tuo feedback.';
+    message.dataset.success = '';
+    message.textContent = 'Grazie! Ho ricevuto il tuo feedback.';
+    message.focus();
   } catch {
-    status.textContent = 'Non sono riuscito a inviare il feedback. Puoi riprovare senza riscrivere le risposte.';
-    button.disabled = false;
+    message.textContent = 'L’invio non è riuscito. Puoi riprovare, le risposte sono ancora qui.';
+    sending = false;
+    back.disabled = false;
+    submit.disabled = false;
   }
 });
-if (endpoint) {
-  button.disabled = false;
-  status.textContent = '';
+</script>
+<script type="module">
+import { createElement as h, useEffect, useRef } from 'https://esm.sh/react@19.1.0';
+import { createRoot } from 'https://esm.sh/react-dom@19.1.0/client?deps=react@19.1.0';
+
+/*
+GradientText and Magnet adapted from https://github.com/DavidHDev/react-bits
+MIT + Commons Clause License Condition v1.0
+
+Copyright (c) 2026 David Haz
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, and distribute the Software **as part of an application, website, or product**, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+## Commons Clause Restriction
+
+You may use this Software, including for any commercial purpose, **so long as you do not sell, sublicense, or redistribute the components themselves-whether alone, in a bundle, or as a ported version.**
+
+The same restriction covers the React Bits tools (Background Studio, Texture Lab, Shape Magic, Center Stage, Sound Lab and any tools added later) and the sounds in the sound library. **You may not sell, sublicense, or redistribute the tools or the sounds themselves, or offer the tools or a substantially similar copy of them as a hosted service-whether alone, in a bundle, or as a ported version.**
+
+What you make with the tools is yours to use. You can use exported code, images, videos, and audio files in any personal or commercial application, website, or product, including paid ones. **You may not sell or redistribute the exports on their own, either individually or as the product itself, such as a sound, texture, background, or template pack.**
+
+## No Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+const VARIANTS = ['linear', 'flow', 'conic'];
+const ANGLES = { horizontal: 90, vertical: 180, diagonal: 135 };
+const TAU = Math.PI * 2;
+
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+function GradientText({
+  children,
+  colors = ['#5227FF', '#FF9FFC', '#B497CF'],
+  animationSpeed = 8,
+  variant = 'linear',
+  angle = 90,
+  direction,
+  scale = 3,
+  yoyo = true,
+  glow = 0,
+  showBorder = false,
+  borderWidth = 1.5,
+  pauseOnHover = false,
+  followPointer = false,
+  className = '',
+  style
+}) {
+  const rootRef = useRef(null);
+  const settingsRef = useRef(null);
+  const wakeRef = useRef(null);
+  const palette = colors.length > 1 ? colors : [colors[0] ?? '#ffffff', colors[0] ?? '#ffffff'];
+
+  settingsRef.current = {
+    colors: palette,
+    speed: Math.max(0.2, animationSpeed),
+    variant: VARIANTS.includes(variant) ? variant : 'linear',
+    angle: direction ? (ANGLES[direction] ?? angle) : angle,
+    scale: clamp(scale, 1, 6),
+    yoyo,
+    pauseOnHover,
+    followPointer
+  };
+
+  useEffect(() => {
+    wakeRef.current?.();
+  });
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const state = { time: 0, inside: false, visible: true, x: 0.5, y: 0.5, px: 0.5, py: 0.5, vx: 0, vy: 0, pull: 0 };
+    let raf = 0;
+    let last = 0;
+    let alive = true;
+
+    const paint = () => {
+      const s = settingsRef.current;
+      const list = s.colors;
+      const cycle = state.time / s.speed;
+      let image;
+      if (s.variant === 'flow') {
+        const blobs = list.map((color, i) => {
+          const spin = cycle * TAU;
+          const rate = 0.55 + ((i * 0.618) % 1) * 0.5;
+          let x = 50 + 44 * Math.sin(spin * rate + i * 2.1);
+          let y = 50 + 40 * Math.sin(spin * (rate * 0.83 + 0.21) + i * 1.3);
+          if (i === 0) {
+            x += (state.px * 100 - x) * state.pull;
+            y += (state.py * 100 - y) * state.pull;
+          }
+          return `radial-gradient(ellipse ${(22 + 12 * s.scale).toFixed(1)}% ${(60 + 30 * s.scale).toFixed(1)}% at ${x.toFixed(2)}% ${y.toFixed(2)}%, ${color} 0%, transparent 100%)`;
+        });
+        image = `${blobs.join(', ')}, linear-gradient(${s.angle}deg, ${list.join(', ')})`;
+      } else if (s.variant === 'conic') {
+        const sway = s.yoyo ? Math.sin(cycle * Math.PI) * 50 : cycle * 360;
+        const cx = 50 + (state.px * 100 - 50) * state.pull;
+        const cy = 260 + (state.py * 100 - 260) * state.pull;
+        image = `repeating-conic-gradient(from ${(sway - 30).toFixed(2)}deg at ${cx.toFixed(2)}% ${cy.toFixed(2)}%, ${[...list, list[0]].map((color, i) => `${color} ${((i / list.length) * 60 * (3 / s.scale)).toFixed(2)}deg`).join(', ')})`;
+      } else {
+        const loop = [...list, list[0]];
+        const period = 100 * s.scale;
+        let offset;
+        if (s.yoyo) {
+          const swing = cycle % 2;
+          const t = swing < 1 ? swing : 2 - swing;
+          offset = (0.5 - Math.cos(Math.PI * t) / 2) * (period - 100);
+        } else {
+          offset = (cycle % 1) * period;
+        }
+        offset += (state.px - 0.5) * period * 0.5 * state.pull;
+        const stops = loop.map((color, i) => `${color} ${((i / (loop.length - 1)) * period - offset).toFixed(2)}%`);
+        image = `repeating-linear-gradient(${s.angle}deg, ${stops.join(', ')})`;
+      }
+      root.style.setProperty('--gt-gradient', image);
+    };
+
+    const tick = now => {
+      raf = 0;
+      if (!alive) return;
+      const s = settingsRef.current;
+      const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
+      last = now;
+      const paused = reduce || (s.pauseOnHover && state.inside);
+      if (!paused) state.time += dt;
+      const target = s.followPointer && state.inside ? 1 : 0;
+      state.pull += (target - state.pull) * (1 - Math.exp(-dt * 6));
+      const stiffness = 160;
+      state.vx += ((state.x - state.px) * stiffness - state.vx * 2 * Math.sqrt(stiffness)) * dt;
+      state.vy += ((state.y - state.py) * stiffness - state.vy * 2 * Math.sqrt(stiffness)) * dt;
+      state.px += state.vx * dt;
+      state.py += state.vy * dt;
+      paint();
+      const settling = Math.abs(state.pull - target) > 0.001 || Math.abs(state.vx) + Math.abs(state.vy) > 0.001;
+      if (!state.visible || (paused && !settling)) return;
+      raf = requestAnimationFrame(tick);
+    };
+
+    const wake = () => {
+      if (raf || !alive) return;
+      last = performance.now();
+      raf = requestAnimationFrame(tick);
+    };
+    wakeRef.current = () => {
+      paint();
+      wake();
+    };
+
+    const locate = event => {
+      const rect = root.getBoundingClientRect();
+      state.x = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+      state.y = clamp((event.clientY - rect.top) / rect.height, 0, 1);
+    };
+    const onEnter = event => {
+      locate(event);
+      if (!state.inside) {
+        state.px = state.x;
+        state.py = state.y;
+      }
+      state.inside = true;
+      wake();
+    };
+    const onMove = event => {
+      locate(event);
+      wake();
+    };
+    const onLeave = () => {
+      state.inside = false;
+      wake();
+    };
+
+    const observer = new IntersectionObserver(entries => {
+      state.visible = entries.some(entry => entry.isIntersecting);
+      if (state.visible) wake();
+    });
+    observer.observe(root);
+    root.addEventListener('pointerenter', onEnter);
+    root.addEventListener('pointermove', onMove);
+    root.addEventListener('pointerleave', onLeave);
+    paint();
+    wake();
+
+    return () => {
+      alive = false;
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+      root.removeEventListener('pointerenter', onEnter);
+      root.removeEventListener('pointermove', onMove);
+      root.removeEventListener('pointerleave', onLeave);
+      wakeRef.current = null;
+    };
+  }, []);
+
+  const loop = [...palette, palette[0]];
+
+  return h('span', {
+    ref: rootRef,
+    className: 'gradient-text',
+    style: { '--gt-gradient': 'linear-gradient(' + angle + 'deg, ' + loop.join(', ') + ')' }
+  }, children);
 }
+
+const DEFAULT_SPRING = { stiffness: 170, damping: 16, mass: 1 };
+
+const smoothstep = (edge0, edge1, value) => {
+  const t = Math.min(1, Math.max(0, (value - edge0) / (edge1 - edge0)));
+  return t * t * (3 - 2 * t);
+};
+
+const registry = new Set();
+const field = { pointer: null, owner: null };
+let detach = null;
+
+const reach = (rect, pointer) => {
+  const dx = pointer.x - (rect.left + rect.width / 2);
+  const dy = pointer.y - (rect.top + rect.height / 2);
+  const outside = Math.hypot(Math.max(0, Math.abs(dx) - rect.width / 2), Math.max(0, Math.abs(dy) - rect.height / 2));
+  return { dx, dy, outside };
+};
+
+const arbitrate = () => {
+  let winner = null;
+  let nearest = Infinity;
+  let closest = Infinity;
+  for (const entry of registry) {
+    const s = entry.settings.current;
+    let near = null;
+    if (field.pointer && !s.disabled && !entry.reduce) {
+      near = reach(entry.wrapper.getBoundingClientRect(), field.pointer);
+      if (near.outside > s.padding) near = null;
+    }
+    if (!s.exclusive) {
+      if (near || entry.active) entry.wake();
+      continue;
+    }
+    if (!near) continue;
+    const center = Math.hypot(near.dx, near.dy);
+    if (near.outside < nearest || (near.outside === nearest && center < closest)) {
+      winner = entry;
+      nearest = near.outside;
+      closest = center;
+    }
+  }
+  const previous = field.owner;
+  field.owner = winner;
+  if (previous && previous !== winner) previous.wake();
+  if (winner) winner.wake();
+};
+
+const attach = () => {
+  const onPointerMove = event => {
+    if (event.pointerType === 'touch') return;
+    field.pointer = { x: event.clientX, y: event.clientY };
+    arbitrate();
+  };
+  const onLeave = () => {
+    field.pointer = null;
+    arbitrate();
+  };
+  window.addEventListener('pointermove', onPointerMove, { passive: true });
+  window.addEventListener('scroll', arbitrate, { passive: true, capture: true });
+  document.documentElement.addEventListener('pointerleave', onLeave);
+  window.addEventListener('blur', onLeave);
+  return () => {
+    window.removeEventListener('pointermove', onPointerMove);
+    window.removeEventListener('scroll', arbitrate, { capture: true });
+    document.documentElement.removeEventListener('pointerleave', onLeave);
+    window.removeEventListener('blur', onLeave);
+  };
+};
+
+const Magnet = ({
+  children,
+  padding = 100,
+  disabled = false,
+  magnetStrength = 2,
+  maxOffset,
+  exclusive = true,
+  axis = 'both',
+  tilt = 0,
+  scale = 1,
+  spring,
+  onActiveChange,
+  wrapperClassName = '',
+  innerClassName = '',
+  style,
+  ...props
+}) => {
+  const wrapperRef = useRef(null);
+  const innerRef = useRef(null);
+  const wakeRef = useRef(null);
+  const settings = {
+    padding: Math.max(0, padding),
+    disabled,
+    strength: Math.max(0.1, magnetStrength),
+    maxOffset,
+    exclusive,
+    axis,
+    tilt,
+    scale,
+    stiffness: Math.max(1, spring?.stiffness ?? DEFAULT_SPRING.stiffness),
+    damping: Math.max(0, spring?.damping ?? DEFAULT_SPRING.damping),
+    mass: Math.max(0.01, spring?.mass ?? DEFAULT_SPRING.mass),
+    onActiveChange
+  };
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    const inner = innerRef.current;
+    if (!wrapper || !inner) return undefined;
+
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const current = { x: 0, y: 0, tiltX: 0, tiltY: 0, scale: 1 };
+    const velocity = { x: 0, y: 0, tiltX: 0, tiltY: 0, scale: 0 };
+    let active = false;
+    let raf = 0;
+    let last = 0;
+
+    const solve = (target, dt) => {
+      const s = settingsRef.current;
+      let resting = true;
+      Object.keys(current).forEach(key => {
+        const force = s.stiffness * (target[key] - current[key]) - s.damping * velocity[key];
+        velocity[key] += (force / s.mass) * dt;
+        current[key] += velocity[key] * dt;
+        const epsilon = key === 'scale' ? 0.001 : 0.05;
+        if (Math.abs(target[key] - current[key]) > epsilon || Math.abs(velocity[key]) > epsilon) resting = false;
+      });
+      return resting;
+    };
+
+    const measure = () => {
+      const s = settingsRef.current;
+      const target = { x: 0, y: 0, tiltX: 0, tiltY: 0, scale: 1 };
+      if (s.disabled || reduce || !field.pointer) return { target, engaged: false };
+      if (s.exclusive && field.owner !== entry) return { target, engaged: false };
+      const rect = wrapper.getBoundingClientRect();
+      const { dx, dy, outside } = reach(rect, field.pointer);
+      if (outside > s.padding) return { target, engaged: false };
+      const pull = s.padding > 0 ? 1 - smoothstep(s.padding * 0.5, s.padding, outside) : 1;
+      let x = s.axis === 'y' ? 0 : (dx / s.strength) * pull;
+      let y = s.axis === 'x' ? 0 : (dy / s.strength) * pull;
+      if (s.maxOffset !== undefined && s.maxOffset !== null) {
+        const length = Math.hypot(x, y);
+        if (length > s.maxOffset) {
+          x *= s.maxOffset / length;
+          y *= s.maxOffset / length;
+        }
+      }
+      const nx = Math.max(-1, Math.min(1, dx / Math.max(rect.width / 2, 1)));
+      const ny = Math.max(-1, Math.min(1, dy / Math.max(rect.height / 2, 1)));
+      target.x = x;
+      target.y = y;
+      target.tiltX = -ny * s.tilt * pull;
+      target.tiltY = nx * s.tilt * pull;
+      target.scale = 1 + (s.scale - 1) * pull;
+      return { target, engaged: true };
+    };
+
+    const apply = () => {
+      const { x, y, tiltX, tiltY, scale } = current;
+      const turned = Math.abs(tiltX) > 0.01 || Math.abs(tiltY) > 0.01;
+      inner.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)${
+        turned ? ` perspective(800px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)` : ''
+      }${Math.abs(scale - 1) > 0.0005 ? ` scale(${scale.toFixed(4)})` : ''}`;
+    };
+
+    const frame = now => {
+      raf = 0;
+      const dt = last ? Math.min((now - last) / 1000, 1 / 30) : 1 / 60;
+      last = now;
+      const { target, engaged } = measure();
+      if (engaged !== active) {
+        active = engaged;
+        entry.active = engaged;
+        if (engaged) wrapper.setAttribute('data-magnet-active', '');
+        else wrapper.removeAttribute('data-magnet-active');
+        settingsRef.current.onActiveChange?.(engaged);
+      }
+      const steps = Math.ceil(dt / (1 / 120));
+      let resting = true;
+      for (let i = 0; i < steps; i++) resting = solve(target, dt / steps);
+      if (resting) {
+        Object.keys(current).forEach(key => {
+          current[key] = target[key];
+          velocity[key] = 0;
+        });
+      }
+      apply();
+      if (!resting) raf = requestAnimationFrame(frame);
+      else last = 0;
+    };
+
+    function wake() {
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+
+    const entry = { wrapper, settings: settingsRef, reduce, wake, active: false };
+    registry.add(entry);
+    if (!detach) detach = attach();
+    wakeRef.current = () => {
+      arbitrate();
+      wake();
+    };
+
+    return () => {
+      cancelAnimationFrame(raf);
+      wakeRef.current = null;
+      registry.delete(entry);
+      if (field.owner === entry) field.owner = null;
+      if (!registry.size && detach) {
+        detach();
+        detach = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    wakeRef.current?.();
+  });
+
+  return h('div', {
+    ...props, ref: wrapperRef, className: wrapperClassName,
+    style: { position: 'relative', display: 'inline-block', ...style }
+  }, h('div', { ref: innerRef, className: innerClassName, style: { willChange: 'transform' } }, children));
+};
+
+const title = document.querySelector('#title');
+createRoot(title).render(h(GradientText, { colors: ['#f0f5f3', '#a5f3cc', '#9acfdb'] }, title.textContent));
+createRoot(document.querySelector('#brand-mark')).render(
+  h(Magnet, { padding: 18, maxOffset: 4 }, h('span', { className: 'mark' }, 'SB'))
+);
 </script>
 </body>
 </html>
