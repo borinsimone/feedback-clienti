@@ -1,0 +1,13 @@
+name = "feedback-clienti"
+main = "worker.mjs"
+compatibility_date = "2026-11-19"
+workers_dev = true
+preview_urls = false
+
+[vars]
+ALLOWED_ORIGIN = "https://borinsimone.github.io"
+
+[[ratelimits]]
+name = "SUBMISSIONS"
+namespace_id = "1"
+simple = { limit = 4, period = 60 }

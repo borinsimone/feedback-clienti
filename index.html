@@ -107,8 +107,7 @@ const progress = document.querySelector('progress');
 const stepLabel = document.querySelector('#step-label');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const project = new URLSearchParams(location.search).get('progetto')?.trim().slice(0, 120);
-const emailConfig = {};
-const { serviceId: emailServiceId, templateId: emailTemplateId, publicKey: emailPublicKey } = emailConfig;
+const feedbackEndpoint = '';
 
 if (project) {
   document.querySelector('#project-name').textContent = project;
@@ -129,10 +128,10 @@ function showStep(target) {
   back.hidden = step === 0;
   next.hidden = last;
   submit.hidden = !last;
-  submit.disabled = !emailPublicKey;
+  submit.disabled = !feedbackEndpoint;
   progress.value = step + 1;
   stepLabel.textContent = 'Domanda ' + (step + 1) + ' di ' + panels.length;
-  message.textContent = last && !emailPublicKey ? 'L’invio del feedback non è ancora attivo.' : '';
+  message.textContent = last && !feedbackEndpoint ? 'L’invio del feedback non è ancora attivo.' : '';
   panel.querySelector('.question').focus({ preventScroll: true });
 
   if (!reduced.matches && direction && panel.animate) {
@@ -161,7 +160,7 @@ form.addEventListener('submit', async event => {
     advance();
     return;
   }
-  if (!emailPublicKey) return;
+  if (!feedbackEndpoint) return;
 
   const answers = new FormData(form);
   sending = true;
@@ -169,19 +168,14 @@ form.addEventListener('submit', async event => {
   submit.disabled = true;
   message.textContent = 'Invio in corso…';
   try {
-    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+    const response = await fetch(feedbackEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        service_id: emailServiceId,
-        template_id: emailTemplateId,
-        user_id: emailPublicKey,
-        template_params: {
-          progetto: answers.get('Progetto'),
-          voto: answers.get('Valutazione'),
-          cosa_ha_funzionato: answers.get('Cosa ha funzionato').trim() || 'Nessuna risposta',
-          cosa_migliorare: answers.get('Cosa migliorare').trim() || 'Nessuna risposta'
-        }
+        progetto: answers.get('Progetto'),
+        voto: Number(answers.get('Valutazione')),
+        cosa_ha_funzionato: answers.get('Cosa ha funzionato').trim(),
+        cosa_migliorare: answers.get('Cosa migliorare').trim()
       })
     });
     if (!response.ok) throw new Error('Invio non riuscito');

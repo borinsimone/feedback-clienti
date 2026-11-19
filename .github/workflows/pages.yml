@@ -26,9 +26,7 @@ jobs:
           node-version: '22'
       - run: node build.mjs
         env:
-          EMAILJS_SERVICE_ID: ${{ vars.EMAILJS_SERVICE_ID }}
-          EMAILJS_TEMPLATE_ID: ${{ vars.EMAILJS_TEMPLATE_ID }}
-          EMAILJS_PUBLIC_KEY: ${{ vars.EMAILJS_PUBLIC_KEY }}
+          FEEDBACK_ENDPOINT: ${{ vars.FEEDBACK_ENDPOINT }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
