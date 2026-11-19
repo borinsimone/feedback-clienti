@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Feedback sul progetto · Simone Borin</title>
+<style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #172b26; background: #edf2ec; }
+* { box-sizing: border-box; }
+main { width: min(100% - 2rem, 40rem); margin: clamp(1.5rem, 6vw, 5rem) auto; }
+header { margin-bottom: 1.75rem; }
+.author { color: #35584b; font-weight: 650; }
+h1 { font-family: Georgia, serif; font-size: clamp(2rem, 7vw, 3.6rem); font-weight: 500; line-height: 1.05; margin: .6rem 0 1rem; }
+p { line-height: 1.55; }
+form { background: #fff; padding: clamp(1rem, 5vw, 2rem); border: 1px solid #cddbd0; border-radius: 1rem; }
+fieldset { padding: 0; margin: 0; border: 0; min-width: 0; }
+legend, label { font-weight: 650; }
+textarea, button { font: inherit; }
+textarea { width: 100%; margin-top: .4rem; padding: .6rem; border: 1px solid #82988a; border-radius: .45rem; resize: vertical; }
+.form-field { margin-top: 1.4rem; }
+small { color: #466055; font-weight: 400; }
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: .4rem; margin: .65rem 0 .35rem; }
+.scale label { display: flex; justify-content: center; align-items: center; gap: .2rem; min-height: 44px; border: 1px solid #82988a; border-radius: .45rem; cursor: pointer; }
+.scale label:has(:checked) { background: #d9eadf; border-color: #254b3a; }
+input { accent-color: #254b3a; }
+.scale-labels { display: flex; justify-content: space-between; gap: .5rem; }
+button { margin-top: 1.4rem; min-height: 44px; padding: .6rem 1rem; border: 0; border-radius: .45rem; background: #254b3a; color: #fff; font-weight: 650; cursor: pointer; }
+button:disabled { background: #e2e8e3; color: #46584d; cursor: default; }
+:focus-visible { outline: 3px solid #297462; outline-offset: 3px; }
+#status { margin-bottom: 0; }
+</style>
+</head>
+<body>
+<main>
+<header>
+<p class="author">Simone Borin</p>
+<h1>Com’è andata?</h1>
+<p>Grazie per aver lavorato con me. Il tuo feedback mi aiuta a capire cosa ha funzionato e cosa posso migliorare.</p>
+<p id="project-label" hidden>Progetto <strong id="project-name"></strong></p>
+</header>
+<form id="feedback" method="post" data-endpoint="" aria-describedby="status">
+<input type="hidden" name="Progetto" id="project">
+<fieldset>
+<legend>Quanto il risultato risponde a quello che ti serviva?</legend>
+<div class="scale">
+<label><input type="radio" name="Valutazione" value="1" required aria-describedby="scale-labels"> 1</label>
+<label><input type="radio" name="Valutazione" value="2" aria-describedby="scale-labels"> 2</label>
+<label><input type="radio" name="Valutazione" value="3" aria-describedby="scale-labels"> 3</label>
+<label><input type="radio" name="Valutazione" value="4" aria-describedby="scale-labels"> 4</label>
+<label><input type="radio" name="Valutazione" value="5" aria-describedby="scale-labels"> 5</label>
+</div>
+<small class="scale-labels" id="scale-labels"><span>1 · Per niente</span><span>5 · Del tutto</span></small>
+</fieldset>
+<div class="form-field">
+<label for="strengths">Cosa ha funzionato meglio durante il progetto? <small>Facoltativo</small></label>
+<textarea id="strengths" name="Cosa ha funzionato" rows="3" maxlength="2000"></textarea>
+</div>
+<div class="form-field">
+<label for="changes">Se rifacessimo il progetto insieme, cosa cambieresti? <small>Facoltativo</small></label>
+<textarea id="changes" name="Cosa migliorare" rows="3" maxlength="2000"></textarea>
+</div>
+<button type="submit" disabled>Invia feedback</button>
+<p id="status" role="status">L’invio del feedback non è ancora attivo.</p>
+</form>
+</main>
+<script>
+const form = document.querySelector('#feedback');
+const button = form.querySelector('button');
+const status = document.querySelector('#status');
+const project = new URLSearchParams(location.search).get('progetto')?.trim().slice(0, 120);
+if (project) {
+  document.querySelector('#project-name').textContent = project;
+  document.querySelector('#project-label').hidden = false;
+}
+document.querySelector('#project').value = project || 'Generico';
+
+const endpoint = form.dataset.endpoint.trim();
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!endpoint || button.disabled) return;
+
+  const answers = new FormData(form);
+  button.disabled = true;
+  status.textContent = 'Invio in corso…';
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: answers
+    });
+    if (!response.ok) throw new Error('Invio non riuscito');
+    form.reset();
+    form.querySelectorAll('fieldset, .form-field, button').forEach((element) => {
+      element.hidden = true;
+    });
+    status.textContent = 'Grazie! Ho ricevuto il tuo feedback.';
+  } catch {
+    status.textContent = 'Non sono riuscito a inviare il feedback. Puoi riprovare senza riscrivere le risposte.';
+    button.disabled = false;
+  }
+});
+if (endpoint) {
+  button.disabled = false;
+  status.textContent = '';
+}
+</script>
+</body>
+</html>
